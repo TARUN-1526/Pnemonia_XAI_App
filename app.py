@@ -8,18 +8,14 @@ from PIL import Image
 import gdown
 import os
 
-# =========================================================
-# PAGE CONFIG
-# =========================================================
+
 st.set_page_config(
     page_title="Pneumonia Detection using XAI",
     page_icon="🩺",
     layout="wide"
 )
 
-# =========================================================
-# DOWNLOAD MODELS
-# =========================================================
+
 MODELS = {
 
     "lung_segmentation_model.pth":
@@ -35,9 +31,9 @@ MODELS = {
     "https://drive.google.com/uc?id=1_pHFm4F8Flfme3ScMYDDkoNBgH4V4KgS"
 }
 
-# =========================================================
-# DOWNLOAD IF NOT EXISTS
-# =========================================================
+
+
+
 for filename, url in MODELS.items():
 
     if not os.path.exists(filename):
@@ -50,9 +46,7 @@ for filename, url in MODELS.items():
                 quiet=False
             )
 
-# =========================================================
-# CUSTOM CSS
-# =========================================================
+
 st.markdown("""
 <style>
 
@@ -103,9 +97,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# HEADER
-# =========================================================
+
 st.markdown("""
 <div class='main-title'>
 🩺 Pneumonia Detection using Explainable AI
@@ -120,9 +112,7 @@ U-Net Lung Segmentation + VGG16 + ResNet50 Comparative Analysis
 
 st.write("")
 
-# =========================================================
-# LOAD SEGMENTATION MODEL
-# =========================================================
+
 @st.cache_resource
 def load_segmentation_model():
 
@@ -150,9 +140,7 @@ def load_segmentation_model():
 
 segmentation_model = load_segmentation_model()
 
-# =========================================================
-# LOAD CLASSIFICATION MODELS
-# =========================================================
+
 @st.cache_resource
 def load_models():
 
@@ -180,9 +168,7 @@ def load_models():
     model_resnet_bg
 ) = load_models()
 
-# =========================================================
-# PREPROCESS IMAGE
-# =========================================================
+
 def preprocess_image(image):
 
     img = np.array(image)
@@ -206,9 +192,7 @@ def preprocess_image(image):
 
     return img
 
-# =========================================================
-# SEGMENT LUNGS
-# =========================================================
+
 def segment_lungs(image):
 
     image_rgb = np.array(image)
@@ -248,9 +232,7 @@ def segment_lungs(image):
 
     return segmented_image
 
-# =========================================================
-# PREDICTION FUNCTION
-# =========================================================
+
 def predict_image(model, processed_image):
 
     prediction = model.predict(
@@ -274,9 +256,7 @@ def predict_image(model, processed_image):
 
     return predicted_class, confidence
 
-# =========================================================
-# GRAD-CAM
-# =========================================================
+
 def make_gradcam_heatmap(
     img_array,
     model,
@@ -338,9 +318,6 @@ def make_gradcam_heatmap(
 
     return heatmap.numpy()
 
-# =========================================================
-# OVERLAY HEATMAP
-# =========================================================
 def overlay_heatmap(
     heatmap,
     original_image,
@@ -376,9 +353,9 @@ def overlay_heatmap(
 
     return superimposed_img
 
-# =========================================================
+
 # SIDEBAR
-# =========================================================
+
 with st.sidebar:
 
     st.title("🧠 AI Healthcare Dashboard")
@@ -395,18 +372,18 @@ with st.sidebar:
         "✅ All Models Loaded Successfully"
     )
 
-# =========================================================
+
 # FILE UPLOADER
-# =========================================================
+
 uploaded_files = st.file_uploader(
     "📤 Upload Chest X-Ray Images",
     type=["jpg", "jpeg", "png"],
     accept_multiple_files=True
 )
 
-# =========================================================
+
 # MAIN PROCESSING
-# =========================================================
+
 if uploaded_files is not None and len(uploaded_files) > 0:
 
     for uploaded_file in uploaded_files:
@@ -427,9 +404,9 @@ if uploaded_files is not None and len(uploaded_files) > 0:
             segmented_image
         )
 
-        # =================================================
+        
         # FILE TITLE
-        # =================================================
+        
         st.markdown(f"""
         <div class='card'>
         <h3 style='text-align:center;color:#0F172A;'>
@@ -438,9 +415,9 @@ if uploaded_files is not None and len(uploaded_files) > 0:
         </div>
         """, unsafe_allow_html=True)
 
-        # =================================================
+        
         # IMAGE DISPLAY
-        # =================================================
+        
         img1, img2 = st.columns(2)
 
         with img1:
@@ -487,9 +464,9 @@ if uploaded_files is not None and len(uploaded_files) > 0:
 
         st.write("")
 
-        # =================================================
+        
         # MODEL RESULTS
-        # =================================================
+        
         col1, col2, col3 = st.columns(3)
 
         model_details = [
@@ -552,9 +529,9 @@ if uploaded_files is not None and len(uploaded_files) > 0:
                     processed_img
                 )
 
-                # =========================================
+               
                 # DISPLAY PREDICTION
-                # =========================================
+               
                 if pred == "PNEUMONIA":
 
                     st.markdown(
@@ -578,9 +555,9 @@ if uploaded_files is not None and len(uploaded_files) > 0:
                     int(conf)
                 )
 
-                # =========================================
+                
                 # GRAD-CAM
-                # =========================================
+                
                 heatmap = make_gradcam_heatmap(
                     processed_img,
                     model,
@@ -606,9 +583,9 @@ if uploaded_files is not None and len(uploaded_files) > 0:
         st.write("")
         st.write("---")
 
-# =========================================================
+
 # FOOTER
-# =========================================================
+
 st.markdown("""
 <div class='footer'>
 <hr>
