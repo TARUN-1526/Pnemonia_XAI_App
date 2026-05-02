@@ -1,0 +1,12 @@
+streamlit
+tensorflow
+torch
+torchvision
+segmentation-models-pytorch
+timm
+efficientnet_pytorch
+opencv-python-headless
+numpy
+Pillow
+gdown
+h5py
