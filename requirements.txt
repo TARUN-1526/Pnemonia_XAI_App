@@ -1,5 +1,5 @@
 streamlit==1.44.1
-tensorflow==2.16.1
+tensorflow-cpu==2.16.1
 torch==2.2.2
 torchvision==0.17.2
 segmentation-models-pytorch==0.3.3
